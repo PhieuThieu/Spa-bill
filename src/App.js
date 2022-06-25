@@ -1,96 +1,231 @@
-import {useState, useRef, useEffect} from "react"
+import {useState, useRef, useEffect, useMemo} from "react"
 import './App.css';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {solid, regular, brands} from '@fortawesome/fontawesome-svg-core/import.macro'
 import {useReactToPrint} from "react-to-print";
 
-const obj1 = [{'Nặn Mụn': 200000}, {'Gội Đầu': 50}, {'Massage': 150},]
-
+const cashArr = [{'Chăm sóc da cơ bản': 200000}, {'Chăm sóc da nâng cơ': 250000}, {'Hút chì thải độc tố': 200000}, {'Thải độc Corticord': 400000}, {'Lấy mụn cơ bản': 200000}, {'Lấy mụn chuyên sâu': 300000}, {'Lấy mụn vùng lưng': 350000}, {'Giảm quần thâm mắt': 200000}, {'Hấp trắng face': 300000}, {'Chạy vitamin C': 300000}, {'Phun Oxy tươi': 350000}, {'Cấy HA căng bóng': 350000}, {'Cấy nano B5 phục hồi': 350000}, {'Cấy chỉ nano collagen': 400000}, {'Điện di chống lão hóa': 300000}, {'Phi kim tế bào gốc': 1000000}, {'Vi kim tảo biển': 1500000}, {'Cấy máu tự thân PRP': 2000000}, {'Laser Carbon': 1000000}, {'Đốt hột ruồi, tàn nhang': 50000}, {'Tẩy tế bào chết body': 200000}, {'Tắm dưỡng thiên nhiên': 350000}, {'Tắm dưỡng độc quyền': 500000}, {'Tắm Face+Body': 600000}, {'Massage bụng': 200000}, {'Massage body': 250000}, {'Nối mi tự nhiên': 180000}, {'Nối mi volume 1': 200000}, {'Nối mi volume 2': 250000}, {'Nối mi thiết kế': 300000}, {'Dặm mi tự nhiên 50': 90000}, {'Dặm mi tự nhiên 70': 126000}, {'Dặm mi volume 1 50': 100000}, {'Dặm mi volume 1 70': 140000}, {'Dặm mi volume 2 50': 125000}, {'Dặm mi volume 2 70': 175000}, {'Dặm mi thiết kế 50': 150000}, {'Dặm mi thiết kế 70': 210000}, {'Triệt nách 1 lần': 79000}, {'Triệt nách 10 lần': 649000}, {'Triệt nách vĩnh viễn': 949000}, {'Triệt mép 1 lần': 79000}, {'Triệt mép 10 lần': 649000}, {'Triệt mép vĩnh viễn': 949000}, {'Triệt mặt 1 lần': 128000}, {'Triệt mặt 10 lần': 1099000}, {'Triệt mặt vĩnh viễn': 1399000}, {'Triệt tay 1 lần': 139000}, {'Triệt tay 10 lần': 1099000}, {'Triệt tay vĩnh viễn': 1399000}, {'Triệt chân 1 lần': 169000}, {'Triệt chân 10 lần': 1299000}, {'Triệt chân vĩnh viễn': 1599000}, {'Triệt lưng 1 lần': 249000}, {'Triệt lưng 10 lần': 1599000}, {'Triệt lưng vĩnh viễn': 1899000}, {'Triệt bikini 1 lần': 399000}, {'Triệt bikini 10 lần': 1999000}, {'Triệt bikini vĩnh viễn': 2999000}, {'Triệt lông toàn thân vv': 10000000}, {'Điều trị mụn tận gốc': 6000000}, {'Điều trị mụn + thâm': 7000000}, {'Điều trị mụn+thâm+lcl': 8000000}, {'Điều trị mụn+thâm+sẹo1': 10000000}, {'Điều trị mụn+thâm+sẹo2': 15000000}, {'Điều trị tàn nhang, nám 1': 10000000}, {'Điều trị tàn nhang, nám 2': 15000000}, {'Điều trị tàn nhang, nám 3': 20000000}, {'Điều trị tàn nhang, nám 4': 25000000}, {'Điều trị tàn nhang, nám 5': 30000000}, {'Điều trị mụn lưng 1': 10000000}, {'Điều trị mụn lưng 2': 15000000}, {'Điều trị mụn lưng,viêm nl1': 10000000}, {'Điều trị mụn lưng,viêm nl2': 15000000}, {'Điều trị mụn lưng viêm nl3': 20000000},]
+// const b = cashArr.slice()
+const freeArr = [{'Chăm sóc da cơ bản': 200000}, {'Chăm sóc da nâng cơ': 250000}, {'Hút chì thải độc tố': 200000}, {'Thải độc Corticord': 400000}, {'Lấy mụn cơ bản': 200000}, {'Lấy mụn chuyên sâu': 300000}, {'Lấy mụn vùng lưng': 350000}, {'Giảm quần thâm mắt': 200000}, {'Hấp trắng face': 300000}, {'Chạy vitamin C': 300000}, {'Phun Oxy tươi': 350000}, {'Cấy HA căng bóng': 350000}, {'Cấy nano B5 phục hồi': 350000}, {'Cấy chỉ nano collagen': 400000}, {'Điện di chống lão hóa': 300000}, {'Phi kim tế bào gốc': 1000000}, {'Vi kim tảo biển': 1500000}, {'Cấy máu tự thân PRP': 2000000}, {'Laser Carbon': 1000000}, {'Đốt hột ruồi, tàn nhang': 50000}, {'Tẩy tế bào chết body': 200000}, {'Tắm dưỡng thiên nhiên': 350000}, {'Tắm dưỡng độc quyền': 500000}, {'Tắm Face+Body': 600000}, {'Massage bụng': 200000}, {'Massage body': 250000}, {'Nối mi tự nhiên': 180000}, {'Nối mi volume 1': 200000}, {'Nối mi volume 2': 250000}, {'Nối mi thiết kế': 300000}, {'Dặm mi tự nhiên 50': 90000}, {'Dặm mi tự nhiên 70': 126000}, {'Dặm mi volume 1 50': 100000}, {'Dặm mi volume 1 70': 140000}, {'Dặm mi volume 2 50': 125000}, {'Dặm mi volume 2 70': 175000}, {'Dặm mi thiết kế 50': 150000}, {'Dặm mi thiết kế 70': 210000}, {'Triệt nách 1 lần': 79000}, {'Triệt nách 10 lần': 649000}, {'Triệt nách vĩnh viễn': 949000}, {'Triệt mép 1 lần': 79000}, {'Triệt mép 10 lần': 649000}, {'Triệt mép vĩnh viễn': 949000}, {'Triệt mặt 1 lần': 128000}, {'Triệt mặt 10 lần': 1099000}, {'Triệt mặt vĩnh viễn': 1399000}, {'Triệt tay 1 lần': 139000}, {'Triệt tay 10 lần': 1099000}, {'Triệt tay vĩnh viễn': 1399000}, {'Triệt chân 1 lần': 169000}, {'Triệt chân 10 lần': 1299000}, {'Triệt chân vĩnh viễn': 1599000}, {'Triệt lưng 1 lần': 249000}, {'Triệt lưng 10 lần': 1599000}, {'Triệt lưng vĩnh viễn': 1899000}, {'Triệt bikini 1 lần': 399000}, {'Triệt bikini 10 lần': 1999000}, {'Triệt bikini vĩnh viễn': 2999000}, {'Triệt lông toàn thân vv': 10000000}, {'Điều trị mụn tận gốc': 6000000}, {'Điều trị mụn + thâm': 7000000}, {'Điều trị mụn+thâm+lcl': 8000000}, {'Điều trị mụn+thâm+sẹo1': 10000000}, {'Điều trị mụn+thâm+sẹo2': 15000000}, {'Điều trị tàn nhang, nám 1': 10000000}, {'Điều trị tàn nhang, nám 2': 15000000}, {'Điều trị tàn nhang, nám 3': 20000000}, {'Điều trị tàn nhang, nám 4': 25000000}, {'Điều trị tàn nhang, nám 5': 30000000}, {'Điều trị mụn lưng 1': 10000000}, {'Điều trị mụn lưng 2': 15000000}, {'Điều trị mụn lưng,viêm nl1': 10000000}, {'Điều trị mụn lưng,viêm nl2': 15000000}, {'Điều trị mụn lưng viêm nl3': 20000000},]
+const discountsNumb = ['none', 10, 20, 50, 100]
 
 function App() {
     const [items, setItems] = useState()
-    const [addItem, setAddItem] = useState()
+    const [cash, setCash] = useState(0)
+    const [change, setChange] = useState(0)
+    const [checkRender, setCheckRender] = useState(false)
+    const [checkChange, setCheckChange] = useState(false)
     const [sum, setSum] = useState(0)
+    const [finalSum, setFinalSum] = useState(0)
+    const [discount, setDiscount] = useState(undefined)
+    const [discountPrice, setDiscountPrice] = useState(undefined)
     const checkList = useRef([])
     const number = useRef([])
     const componentRef = useRef()
+    const formatter = new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'})
+    // const date1 = new Date()
+    // const date2 = `${date1.getDate()}/${date1.getMonth()}/${date1.getFullYear()} ${date1.getHours()}:${date1.getMinutes()}`
 
-    console.log(sum)
+
+    const getDate2 = () => {
+        const date1 = new Date();
+        return date1.getDate() + '/' + date1.getMonth() + '/' + date1.getFullYear() + '       ' + date1.getHours() + ':' + date1.getMinutes()
+    }
 
     useEffect(() => {
         const sumNumb = number.current.reduce((result, cur) => {
             return result + cur
         }, 0)
         setSum(sumNumb)
-    }, [addItem])
+        // console.log(sumNumb,discount,'num', discountPrice,'disco')
+        setCheckChange(!checkChange)
+    }, [checkRender])
+
+    useEffect(() => {
+        const discountPercent = sum * (100 - discount) / 100
+        if (discount === undefined) {
+            setChange((sum === 0) ? 0 : cash - sum)
+        } else {
+            setDiscountPrice(sum - discountPercent)
+            setChange(cash - discountPercent)
+        }
+        setFinalSum(sum - (sum - discountPercent))
+
+    }, [checkChange])
+
+    const test = () => console.log('re')
+
+    const handleDiscount = e => {
+        setDiscount(e.target.value)
+        setCheckChange(!checkChange)
+    }
+
+    const handleCashChange = e => {
+        const cash = Number(e.target.value)
+        setCash(cash)
+        setCheckChange(!checkChange)
+    }
 
     const handleAddItem = () => {
         if (items === undefined) {
-            checkList.current.push(obj1[0])
-            number.current.push(Number(Object.values(obj1[0])))
+            checkList.current.push(cashArr[0])
+            number.current.push(Number(Object.values(cashArr[0])))
         } else {
-            obj1.forEach(item => {
+            cashArr.forEach(item => {
                 if (Object.keys(item) == items) {
                     checkList.current.push(item)
                     number.current.push(Number(Object.values(item)))
                 }
             })
         }
-        setAddItem(checkList.current.length)
+        setChange(cash - (sum + Number(number.current.slice(-1))))
+        setCheckRender(!checkRender)
+    }
+
+    const handleAddFreeItem = () => {
+        if (items === undefined) {
+            freeArr[0][(Object.keys(freeArr[0]))[0]] = 0
+            checkList.current.push(freeArr[0])
+            number.current.push(0)
+        } else {
+            freeArr.forEach(item => {
+                if (Object.keys(item) == items) {
+                    checkList.current.push(item)
+                    number.current.push(0)
+                }
+            })
+        }
+        setCheckRender(!checkRender)
     }
 
     const handleRemoveItem = index => {
         checkList.current.splice(index, 1)
-        console.log('remove')
-        setAddItem(checkList.current.length)
+        number.current.splice(index, 1)
+        setChange((number.current.length === 0) ? 0 : cash - (sum - Number(number.current.slice(-1))))
+        setCheckRender(!checkRender)
     }
 
     const handlePrint = useReactToPrint({
         content: () => componentRef.current
     })
 
-
-    return (<div>
-        <div id='print' ref={componentRef}>
-            <h1 className='text-center text-5xl'>TIỂU MẪN BEAUTY & ACADEMY</h1>
-            <h3 className='text-center text-1xl'>20 Lò Siêu. Phường 16. Quận 11</h3>
-            <h3 className='text-center text-1xl'>SĐT: 0999010101</h3>
-            <h2 className='text-center text-3xl'>HOÁ ĐƠN THANH TOÁN</h2>
-            <h3 className='text-center text-1xl'>Ngày Giờ</h3>
-            <table className='text-center table-auto border border-spacing-2 border-slate-900'>
+    return (<div className='grid grid-cols-2'>
+        <div id='print'
+             className=' my-5 mx-5' ref={componentRef}>
+            <h4 className="font-bold text-center text-2xl  ">TIỂU MẪN BEAUTY & ACADEMY</h4>
+            <p className='text-base text-center'>20 Lò Siêu. Phường 16. Quận 11</p>
+            <p className='text-base text-center'>SĐT: 0999010101</p>
+            {/*<h2 className='text-center text-xl'>HOÁ ĐƠN THANH TOÁN</h2>*/}
+            <div className='flex justify-between hr'>
+                <p className='text-base'>Ngày Giờ</p>
+                <p className='text-base'>{getDate2()}</p>
+            </div>
+            <table className='mt-5 table-fixed border-collapse border-spacing-5 relative flex flex-col mt-4'>
                 <tbody>
-                <tr className='border border-slate-900'>
-                    <th className='border border-slate-900'>STT</th>
-                    <th className='border border-slate-900'>Dịch Vụ</th>
-                    <th className='border border-slate-900'>Thành Tiền</th>
+                <tr className='grid grid-cols-2'>
+                    <th className='font-semibold text-base text-left leading-tight'>Dịch Vụ</th>
+                    <th className='font-semibold text-base text-right leading-tight'>Thành Tiền</th>
                 </tr>
                 {checkList.current.map((item, index) => {
-                    return (<tr className='border border-slate-900' key={index}>
-                        <td className='border border-slate-900'>{index + 1}</td>
-                        <td className='border border-slate-900'>{Object.keys(item)}</td>
-                        <td className='border border-slate-900'>{Object.values(item)}</td>
-                        <td onClick={() => handleRemoveItem(index)}><FontAwesomeIcon icon={solid('xmark')}/></td>
+                    return (<tr className='grid grid-cols-2' key={index}>
+                        <td className='text-base text-left leading-tight' onClick={() => handleRemoveItem(index)}
+                        >{Object.keys(item)}</td>
+                        <td className='text-base text-right leading-tight' onClick={() => handleRemoveItem(index)}
+                        >{formatter.format(Object.values(item))}</td>
                     </tr>)
                 })}
-                <tr>
-                    <td>Tổng Hoá Đơn</td>
-                    <td></td>
-                    <td className='border border-slate-900'>{sum}</td>
+                <tr className=' grid hr'/>
+                {discount ? <tr className='grid grid-cols-2'>
+                    <td className='text-base text-left leading-tight'>Tiền Chưa Giảm</td>
+                    <td className='text-base text-right leading-tight'>{formatter.format(sum)}</td>
+                </tr> : ''}
+                {discount ? <tr className='grid grid-cols-2'>
+                    <td className='text-base text-left leading-tight'>Giảm Giá {discount + '%'} </td>
+                    <td className='text-base text-right leading-tight'>{formatter.format(discountPrice)}</td>
+                </tr> : ''}
+                <tr className='grid grid-cols-2'>
+                    <td className='font-bold text-left leading-tight text-xl mt-0 mb-2'>Tổng Hoá Đơn</td>
+                    <td className='text-base text-right leading-tight'>{discount ? formatter.format(finalSum) : formatter.format(sum)}</td>
+                </tr>
+                <tr className='grid grid-cols-2'>
+                    <td className='text-base text-left leading-tight'>Tiền khách đưa</td>
+                    <td className='text-base text-right leading-tight'>{formatter.format(cash)}</td>
+                </tr>
+                <tr className='grid grid-cols-2'>
+                    <td className='text-base text-left leading-tight'>Tiền thối lại</td>
+                    <td className='text-base text-right leading-tight'>{formatter.format(change)}</td>
                 </tr>
                 </tbody>
             </table>
+            <h6 className="mt-12 text-center font-medium leading-tight text-base mt-0 mb-2 ">Xin Cảm Ơn Quý Khách</h6>
         </div>
-        <select name="" id="" onChange={e => setItems(e.target.value)}>
-            <optgroup label='Chăm Sóc Da'>
-                {obj1.map((item, i) => {
-                    return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
-                })}
-            </optgroup>
-        </select>
-        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full' onClick={handleAddItem}>ADD</button>
-        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full' onClick={handlePrint}>Print</button>
-    </div>)
-        ;
+        <div id='noPrint'
+             className='grid grid-rows-5 border border-solid border-4 rounded-2xl border-indigo-400 w-[350px] mt-4 h-[500px] bg-indigo-50 '>
+            <select className='selected' name="" id="" onChange={handleDiscount}>
+                <optgroup label='Giảm Giá'>
+                    {discountsNumb.map(numb => {
+                        if (numb === 'none') {
+                            return (<option key={numb} value=''>{''}</option>)
+                        } else {
+                            return (<option key={numb} value={numb}>{numb}</option>)
+                        }
+                    })}
+                </optgroup>
+            </select>
+            <select className='selected' name="" id="" onChange={e => setItems(e.target.value)}>
+                <optgroup label='Chăm Sóc Da'>
+                    {cashArr.map((item, i) => {
+                        if (i <= 19) {
+                            return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
+                        }
+                    })}
+                </optgroup>
+                <optgroup label='Chăm Sóc Body'>
+                    {cashArr.map((item, i) => {
+                        if (i > 19 && i <= 25) {
+                            return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
+                        }
+                    })}
+                </optgroup>
+                <optgroup label='Nối Mi'>
+                    {cashArr.map((item, i) => {
+                        if (i > 25 && i <= 37) {
+                            return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
+                        }
+                    })}
+                </optgroup>
+                <optgroup label='Triệt Lông'>
+                    {cashArr.map((item, i) => {
+                        if (i > 37 && i <= 59) {
+                            return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
+                        }
+                    })}
+                </optgroup>
+                <optgroup label='Liệu Trình'>
+                    {cashArr.map((item, i) => {
+                        if (i > 59) {
+                            return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
+                        }
+                    })}
+                </optgroup>
+            </select>
+            <div className='flex w-11/12 mx-auto justify-center' role='group'>
+                <button
+                    className='btn h-3/4 w-3/4 mr-0 text-2xl rounded-r-none  hover:bg-indigo-500 focus:bg-indigo-700'
+                    onClick={handleAddItem}>ADD
+                </button>
+                <button className='btn h-3/4 w-1/4 ml-0 text-xl rounded-l-none  border-l border-solid border-black'
+                        onClick={handleAddFreeItem}>FREE
+                </button>
+            </div>
+            <input
+                className='focused-input flex mx-auto my-auto border border-solid border-2 border-indigo-400 h-2/3 rounded-3xl w-11/12 placeholder-slate-400 pl-4'
+                type="text"
+                onChange={handleCashChange}
+                placeholder='Nhập tiền khách trả'
+            />
+            <button className='flex items-center btn h-4/5 justify-center' onClick={handlePrint}>Print</button>
+        </div>
+
+    </div>);
 }
 
 export default App;
