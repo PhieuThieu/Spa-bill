@@ -7,12 +7,21 @@
         @apply bg-indigo-600 rounded-xl w-11/12 text-white font-bold text-3xl mx-auto my-auto
     }
     .selected {
-        @apply border border-solid border-2 border-indigo-400 rounded-xl h-2/3 w-11/12 flex mx-auto my-auto
+        @apply border border-solid border-2 border-indigo-400 rounded-xl h-2/3 w-full
     }
     .hr{
         @apply border-double border-t-4 border-neutral-900 border-opacity-30 mt-3 pt-2
     }
     .focused-input{
-        @apply focus:border-transparent
+        @apply border-0
+    }
+    .button-active {
+        @apply  bg-indigo-700
+    }
+    .button-hover {
+        @apply bg-indigo-500
+    }
+    .p-txt {
+        @apply pl-4 mt-1
     }
 }
