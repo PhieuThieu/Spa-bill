@@ -105,7 +105,7 @@ function App() {
 
     return (<div className='grid grid-cols-2'>
         <div id='print'
-             className=' my-5 mx-5 cursor-default' ref={componentRef}>
+             className=' my-5 mx-4 cursor-default' ref={componentRef}>
             <h4 className="font-bold text-center text-2xl  ">TIỂU MẪN BEAUTY & ACADEMY</h4>
             <p className='text-base text-center'>20 Lò Siêu Phường 16 Quận 11</p>
             <p className='text-base text-center'>SĐT: 0999010101</p>
