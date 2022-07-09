@@ -1,9 +1,10 @@
-import {useState, useRef, useEffect, useMemo} from "react"
+import {useState, useRef, useEffect} from "react"
 import './App.css';
 import {useReactToPrint} from "react-to-print";
+import dayjs from "dayjs";
 
-const cashArr = [{'Chăm sóc da cơ bản': 200000}, {'Chăm sóc da nâng cơ': 250000}, {'Hút chì thải độc tố': 200000}, {'Thải độc Corticord': 400000}, {'Lấy mụn cơ bản': 200000}, {'Lấy mụn chuyên sâu': 300000}, {'Lấy mụn vùng lưng': 350000}, {'Giảm quần thâm mắt': 200000}, {'Hấp trắng face': 300000}, {'Chạy vitamin C': 300000}, {'Phun Oxy tươi': 350000}, {'Cấy HA căng bóng': 350000}, {'Cấy nano B5 phục hồi': 350000}, {'Cấy chỉ nano collagen': 400000}, {'Điện di chống lão hóa': 300000}, {'Phi kim tế bào gốc': 1000000}, {'Vi kim tảo biển': 1500000}, {'Cấy máu tự thân PRP': 2000000}, {'Laser Carbon': 1000000}, {'Đốt hột ruồi, tàn nhang': 50000}, {'Tẩy tế bào chết body': 200000}, {'Tắm dưỡng thiên nhiên': 350000}, {'Tắm dưỡng độc quyền': 500000}, {'Tắm Face+Body': 600000}, {'Massage bụng': 200000}, {'Massage body': 250000}, {'Nối mi tự nhiên': 180000}, {'Nối mi volume 1': 200000}, {'Nối mi volume 2': 250000}, {'Nối mi thiết kế': 300000}, {'Dặm mi tự nhiên 50': 90000}, {'Dặm mi tự nhiên 70': 126000}, {'Dặm mi volume 1 50': 100000}, {'Dặm mi volume 1 70': 140000}, {'Dặm mi volume 2 50': 125000}, {'Dặm mi volume 2 70': 175000}, {'Dặm mi thiết kế 50': 150000}, {'Dặm mi thiết kế 70': 210000}, {'Triệt nách 1 lần': 79000}, {'Triệt nách 10 lần': 649000}, {'Triệt nách vĩnh viễn': 949000}, {'Triệt mép 1 lần': 79000}, {'Triệt mép 10 lần': 649000}, {'Triệt mép vĩnh viễn': 949000}, {'Triệt mặt 1 lần': 128000}, {'Triệt mặt 10 lần': 1099000}, {'Triệt mặt vĩnh viễn': 1399000}, {'Triệt tay 1 lần': 139000}, {'Triệt tay 10 lần': 1099000}, {'Triệt tay vĩnh viễn': 1399000}, {'Triệt chân 1 lần': 169000}, {'Triệt chân 10 lần': 1299000}, {'Triệt chân vĩnh viễn': 1599000}, {'Triệt lưng 1 lần': 249000}, {'Triệt lưng 10 lần': 1599000}, {'Triệt lưng vĩnh viễn': 1899000}, {'Triệt bikini 1 lần': 399000}, {'Triệt bikini 10 lần': 1999000}, {'Triệt bikini vĩnh viễn': 2999000}, {'Triệt lông toàn thân vv': 10000000}, {'Điều trị mụn tận gốc': 6000000}, {'Điều trị mụn + thâm': 7000000}, {'Điều trị mụn+thâm+lcl': 8000000}, {'Điều trị mụn+thâm+sẹo1': 10000000}, {'Điều trị mụn+thâm+sẹo2': 15000000}, {'Điều trị tàn nhang, nám 1': 10000000}, {'Điều trị tàn nhang, nám 2': 15000000}, {'Điều trị tàn nhang, nám 3': 20000000}, {'Điều trị tàn nhang, nám 4': 25000000}, {'Điều trị tàn nhang, nám 5': 30000000}, {'Điều trị mụn lưng 1': 10000000}, {'Điều trị mụn lưng 2': 15000000}, {'Điều trị mụn lưng,viêm nl1': 10000000}, {'Điều trị mụn lưng,viêm nl2': 15000000}, {'Điều trị mụn lưng viêm nl3': 20000000},]
-const freeArr = [{'Chăm sóc da cơ bản': 200000}, {'Chăm sóc da nâng cơ': 250000}, {'Hút chì thải độc tố': 200000}, {'Thải độc Corticord': 400000}, {'Lấy mụn cơ bản': 200000}, {'Lấy mụn chuyên sâu': 300000}, {'Lấy mụn vùng lưng': 350000}, {'Giảm quần thâm mắt': 200000}, {'Hấp trắng face': 300000}, {'Chạy vitamin C': 300000}, {'Phun Oxy tươi': 350000}, {'Cấy HA căng bóng': 350000}, {'Cấy nano B5 phục hồi': 350000}, {'Cấy chỉ nano collagen': 400000}, {'Điện di chống lão hóa': 300000}, {'Phi kim tế bào gốc': 1000000}, {'Vi kim tảo biển': 1500000}, {'Cấy máu tự thân PRP': 2000000}, {'Laser Carbon': 1000000}, {'Đốt hột ruồi, tàn nhang': 50000}, {'Tẩy tế bào chết body': 200000}, {'Tắm dưỡng thiên nhiên': 350000}, {'Tắm dưỡng độc quyền': 500000}, {'Tắm Face+Body': 600000}, {'Massage bụng': 200000}, {'Massage body': 250000}, {'Nối mi tự nhiên': 180000}, {'Nối mi volume 1': 200000}, {'Nối mi volume 2': 250000}, {'Nối mi thiết kế': 300000}, {'Dặm mi tự nhiên 50': 90000}, {'Dặm mi tự nhiên 70': 126000}, {'Dặm mi volume 1 50': 100000}, {'Dặm mi volume 1 70': 140000}, {'Dặm mi volume 2 50': 125000}, {'Dặm mi volume 2 70': 175000}, {'Dặm mi thiết kế 50': 150000}, {'Dặm mi thiết kế 70': 210000}, {'Triệt nách 1 lần': 79000}, {'Triệt nách 10 lần': 649000}, {'Triệt nách vĩnh viễn': 949000}, {'Triệt mép 1 lần': 79000}, {'Triệt mép 10 lần': 649000}, {'Triệt mép vĩnh viễn': 949000}, {'Triệt mặt 1 lần': 128000}, {'Triệt mặt 10 lần': 1099000}, {'Triệt mặt vĩnh viễn': 1399000}, {'Triệt tay 1 lần': 139000}, {'Triệt tay 10 lần': 1099000}, {'Triệt tay vĩnh viễn': 1399000}, {'Triệt chân 1 lần': 169000}, {'Triệt chân 10 lần': 1299000}, {'Triệt chân vĩnh viễn': 1599000}, {'Triệt lưng 1 lần': 249000}, {'Triệt lưng 10 lần': 1599000}, {'Triệt lưng vĩnh viễn': 1899000}, {'Triệt bikini 1 lần': 399000}, {'Triệt bikini 10 lần': 1999000}, {'Triệt bikini vĩnh viễn': 2999000}, {'Triệt lông toàn thân vv': 10000000}, {'Điều trị mụn tận gốc': 6000000}, {'Điều trị mụn + thâm': 7000000}, {'Điều trị mụn+thâm+lcl': 8000000}, {'Điều trị mụn+thâm+sẹo1': 10000000}, {'Điều trị mụn+thâm+sẹo2': 15000000}, {'Điều trị tàn nhang, nám 1': 10000000}, {'Điều trị tàn nhang, nám 2': 15000000}, {'Điều trị tàn nhang, nám 3': 20000000}, {'Điều trị tàn nhang, nám 4': 25000000}, {'Điều trị tàn nhang, nám 5': 30000000}, {'Điều trị mụn lưng 1': 10000000}, {'Điều trị mụn lưng 2': 15000000}, {'Điều trị mụn lưng,viêm nl1': 10000000}, {'Điều trị mụn lưng,viêm nl2': 15000000}, {'Điều trị mụn lưng viêm nl3': 20000000},]
+const cashArr = [{'Chăm sóc da cơ bản': 200000}, {'Chăm sóc da nâng cơ': 250000}, {'Hút chì thải độc tố': 200000}, {'Thải độc Corticord': 400000}, {'Lấy mụn cơ bản': 200000}, {'Lấy mụn chuyên sâu': 300000}, {'Lấy mụn vùng lưng': 350000}, {'Giảm quần thâm mắt': 200000}, {'Hấp trắng face': 300000}, {'Chạy vitamin C': 300000}, {'Phun Oxy tươi': 350000}, {'Cấy HA căng bóng': 350000}, {'Cấy nano B5 phục hồi': 350000}, {'Cấy chỉ nano collagen': 400000}, {'Điện di chống lão hóa': 300000}, {'Phi kim tế bào gốc': 1000000}, {'Vi kim tảo biển': 1500000}, {'Cấy máu tự thân PRP': 2000000}, {'Laser Carbon': 1000000}, {'Cấy tảo / Hồng sâm': 300000}, {'Đốt hột ruồi, tàn nhang, mụn thịt	50': 50000}, {'Đốt hột ruồi, tàn nhang, mụn thịt	300': 300000}, {'Đốt hột ruồi, tàn nhang, mụn thịt	500': 500000}, {'Đốt hột ruồi, tàn nhang, mụn thịt	800': 800000}, {'Đốt hột ruồi, tàn nhang, mụn thịt	1000': 1000000}, {'Đốt hột ruồi, tàn nhang': 50000}, {'Tẩy tế bào chết body': 200000}, {'Tắm dưỡng thiên nhiên': 350000}, {'Tắm dưỡng độc quyền': 500000}, {'Tắm Face+Body': 600000}, {'Massage bụng': 200000}, {'Massage body': 250000}, {'Nối mi tự nhiên': 180000}, {'Nối mi volume 1': 200000}, {'Nối mi volume 2': 250000}, {'Nối mi thiết kế': 300000}, {'Dặm mi tự nhiên 50': 90000}, {'Dặm mi tự nhiên 70': 126000}, {'Dặm mi volume 1 50': 100000}, {'Dặm mi volume 1 70': 140000}, {'Dặm mi volume 2 50': 125000}, {'Dặm mi volume 2 70': 175000}, {'Dặm mi thiết kế 50': 150000}, {'Dặm mi thiết kế 70': 210000}, {'Triệt nách 1 lần': 79000}, {'Triệt nách 10 lần': 649000}, {'Triệt nách vĩnh viễn': 949000}, {'Triệt mép 1 lần': 79000}, {'Triệt mép 10 lần': 649000}, {'Triệt mép vĩnh viễn': 949000}, {'Triệt mặt 1 lần': 128000}, {'Triệt mặt 10 lần': 1099000}, {'Triệt mặt vĩnh viễn': 1399000}, {'Triệt tay 1 lần': 139000}, {'Triệt tay 10 lần': 1099000}, {'Triệt tay vĩnh viễn': 1399000}, {'Triệt chân 1 lần': 169000}, {'Triệt chân 10 lần': 1299000}, {'Triệt chân vĩnh viễn': 1599000}, {'Triệt lưng 1 lần': 249000}, {'Triệt lưng 10 lần': 1599000}, {'Triệt lưng vĩnh viễn': 1899000}, {'Triệt bikini 1 lần': 399000}, {'Triệt bikini 10 lần': 1999000}, {'Triệt bikini vĩnh viễn': 2999000}, {'Triệt lông toàn thân vv': 10000000}, {'Wax nách': 60000}, {'Wax nửa tay': 80000}, {'Wax nguyên tay': 120000}, {'Wax nữa chân': 100000}, {'Wax nguyên chân': 180000}, {'Điều trị mụn tận gốc': 6000000}, {'Điều trị mụn + thâm': 7000000}, {'Điều trị mụn+thâm+lcl': 8000000}, {'Điều trị mụn+thâm+sẹo1': 10000000}, {'Điều trị mụn+thâm+sẹo2': 15000000}, {'Điều trị tàn nhang, nám 1': 10000000}, {'Điều trị tàn nhang, nám 2': 15000000}, {'Điều trị tàn nhang, nám 3': 20000000}, {'Điều trị tàn nhang, nám 4': 25000000}, {'Điều trị tàn nhang, nám 5': 30000000}, {'Điều trị mụn lưng 1': 10000000}, {'Điều trị mụn lưng 2': 15000000}, {'Điều trị mụn lưng,viêm nl1': 10000000}, {'Điều trị mụn lưng,viêm nl2': 15000000}, {'Điều trị mụn lưng viêm nl3': 20000000},]
+const freeArr = [{'Chăm sóc da cơ bản': 200000}, {'Chăm sóc da nâng cơ': 250000}, {'Hút chì thải độc tố': 200000}, {'Thải độc Corticord': 400000}, {'Lấy mụn cơ bản': 200000}, {'Lấy mụn chuyên sâu': 300000}, {'Lấy mụn vùng lưng': 350000}, {'Giảm quần thâm mắt': 200000}, {'Hấp trắng face': 300000}, {'Chạy vitamin C': 300000}, {'Phun Oxy tươi': 350000}, {'Cấy HA căng bóng': 350000}, {'Cấy nano B5 phục hồi': 350000}, {'Cấy chỉ nano collagen': 400000}, {'Điện di chống lão hóa': 300000}, {'Phi kim tế bào gốc': 1000000}, {'Vi kim tảo biển': 1500000}, {'Cấy máu tự thân PRP': 2000000}, {'Laser Carbon': 1000000}, {'Cấy tảo / Hồng sâm': 300000}, {'Đốt hột ruồi, tàn nhang, mụn thịt	50': 50000}, {'Đốt hột ruồi, tàn nhang, mụn thịt	300': 300000}, {'Đốt hột ruồi, tàn nhang, mụn thịt	500': 500000}, {'Đốt hột ruồi, tàn nhang, mụn thịt	800': 800000}, {'Đốt hột ruồi, tàn nhang, mụn thịt	1000': 1000000}, {'Đốt hột ruồi, tàn nhang': 50000}, {'Tẩy tế bào chết body': 200000}, {'Tắm dưỡng thiên nhiên': 350000}, {'Tắm dưỡng độc quyền': 500000}, {'Tắm Face+Body': 600000}, {'Massage bụng': 200000}, {'Massage body': 250000}, {'Nối mi tự nhiên': 180000}, {'Nối mi volume 1': 200000}, {'Nối mi volume 2': 250000}, {'Nối mi thiết kế': 300000}, {'Dặm mi tự nhiên 50': 90000}, {'Dặm mi tự nhiên 70': 126000}, {'Dặm mi volume 1 50': 100000}, {'Dặm mi volume 1 70': 140000}, {'Dặm mi volume 2 50': 125000}, {'Dặm mi volume 2 70': 175000}, {'Dặm mi thiết kế 50': 150000}, {'Dặm mi thiết kế 70': 210000}, {'Triệt nách 1 lần': 79000}, {'Triệt nách 10 lần': 649000}, {'Triệt nách vĩnh viễn': 949000}, {'Triệt mép 1 lần': 79000}, {'Triệt mép 10 lần': 649000}, {'Triệt mép vĩnh viễn': 949000}, {'Triệt mặt 1 lần': 128000}, {'Triệt mặt 10 lần': 1099000}, {'Triệt mặt vĩnh viễn': 1399000}, {'Triệt tay 1 lần': 139000}, {'Triệt tay 10 lần': 1099000}, {'Triệt tay vĩnh viễn': 1399000}, {'Triệt chân 1 lần': 169000}, {'Triệt chân 10 lần': 1299000}, {'Triệt chân vĩnh viễn': 1599000}, {'Triệt lưng 1 lần': 249000}, {'Triệt lưng 10 lần': 1599000}, {'Triệt lưng vĩnh viễn': 1899000}, {'Triệt bikini 1 lần': 399000}, {'Triệt bikini 10 lần': 1999000}, {'Triệt bikini vĩnh viễn': 2999000}, {'Triệt lông toàn thân vv': 10000000}, {'Wax nách': 60000}, {'Wax nửa tay': 80000}, {'Wax nguyên tay': 120000}, {'Wax nữa chân': 100000}, {'Wax nguyên chân': 180000}, {'Điều trị mụn tận gốc': 6000000}, {'Điều trị mụn + thâm': 7000000}, {'Điều trị mụn+thâm+lcl': 8000000}, {'Điều trị mụn+thâm+sẹo1': 10000000}, {'Điều trị mụn+thâm+sẹo2': 15000000}, {'Điều trị tàn nhang, nám 1': 10000000}, {'Điều trị tàn nhang, nám 2': 15000000}, {'Điều trị tàn nhang, nám 3': 20000000}, {'Điều trị tàn nhang, nám 4': 25000000}, {'Điều trị tàn nhang, nám 5': 30000000}, {'Điều trị mụn lưng 1': 10000000}, {'Điều trị mụn lưng 2': 15000000}, {'Điều trị mụn lưng,viêm nl1': 10000000}, {'Điều trị mụn lưng,viêm nl2': 15000000}, {'Điều trị mụn lưng viêm nl3': 20000000},]
 const discountsNumb = ['none', 10, 20, 50, 100]
 
 function App() {
@@ -20,12 +21,9 @@ function App() {
     const number = useRef([])
     const componentRef = useRef()
     const formatter = new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'})
+    const time = dayjs().format("DD/MM/YYYY HH:mm")
 
 
-    const getDate = () => {
-        const date = new Date();
-        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
-    }
 
     useEffect(() => {
         const sumNumb = number.current.reduce((result, cur) => {
@@ -107,12 +105,12 @@ function App() {
         <div id='print'
              className=' my-5 mx-4 cursor-default' ref={componentRef}>
             <h4 className="font-bold text-center text-2xl  ">TIỂU MẪN BEAUTY & ACADEMY</h4>
-            <p className='text-base text-center'>20 Lò Siêu Phường 16 Quận 11</p>
-            <p className='text-base text-center'>SĐT: 0999010101</p>
+            <p className='text-base text-center'>29 Lò Siêu Phường 16 Quận 11</p>
+            <p className='text-base text-center'>SĐT: 0766369445</p>
             {/*<h2 className='text-center text-xl'>HOÁ ĐƠN THANH TOÁN</h2>*/}
             <div className='flex justify-between hr'>
                 <p className='text-base'>Ngày Giờ</p>
-                <p className='text-base'>{getDate()}</p>
+                <p className='text-base'>{time}</p>
             </div>
             <table className='mt-5 table-fixed border-collapse border-spacing-5 relative flex flex-col mt-4'>
                 <tbody>
@@ -175,35 +173,42 @@ function App() {
                 <select className='selected' name="" id="" onChange={e => setItems(e.target.value)}>
                 <optgroup label='Chăm Sóc Da'>
                     {cashArr.map((item, i) => {
-                        if (i <= 19) {
+                        if (i <= 24) {
                             return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
                         }
                     })}
                 </optgroup>
                 <optgroup label='Chăm Sóc Body'>
                     {cashArr.map((item, i) => {
-                        if (i > 19 && i <= 25) {
+                        if (i > 24 && i <= 30) {
                             return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
                         }
                     })}
                 </optgroup>
                 <optgroup label='Nối Mi'>
                     {cashArr.map((item, i) => {
-                        if (i > 25 && i <= 37) {
+                        if (i > 30 && i <=42) {
                             return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
                         }
                     })}
                 </optgroup>
                 <optgroup label='Triệt Lông'>
                     {cashArr.map((item, i) => {
-                        if (i > 37 && i <= 59) {
+                        if (i >42 && i <= 64) {
+                            return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
+                        }
+                    })}
+                </optgroup>
+                <optgroup label='Waxing'>
+                    {cashArr.map((item, i) => {
+                        if (i >64 && i <= 70) {
                             return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
                         }
                     })}
                 </optgroup>
                 <optgroup label='Liệu Trình'>
                     {cashArr.map((item, i) => {
-                        if (i > 59) {
+                        if (i > 70) {
                             return (<option key={i} value={Object.keys(item)}>{Object.keys(item)}</option>)
                         }
                     })}
