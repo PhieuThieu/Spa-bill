@@ -100,7 +100,7 @@ function App() {
     content: () => componentRef.current,
   })
 
-  return (<div className='grid grid-cols-1 sm:grid-cols-2'>
+  return (<div className='grid grid-cols-1 md:grid-cols-2'>
     <div id='print'
          className=' my-5 mx-4 cursor-default' ref={componentRef}>
       <h4 className="font-bold text-center text-2xl  ">TIỂU MẪN BEAUTY & ACADEMY</h4>
@@ -153,7 +153,7 @@ function App() {
       <h6 className="mt-1 text-center font-medium leading-tight text-base ">Hẹn Gặp Lại</h6>
     </div>
     <div id='noPrint'
-         className='grid grid-rows-5 border border-solid border-4 rounded-2xl border-indigo-400 w-11/12 sm:w-[350px] mt-4 h-[500px] bg-indigo-50 mx-auto my-5 sm:mx-0'>
+         className='grid grid-rows-5 border border-solid border-4 rounded-2xl border-indigo-400 w-11/12 md:w-[350px] mt-4 h-[500px] bg-indigo-50 mx-auto my-5 md:mx-0'>
             <span className='mx-auto w-11/12'>
                 <p className='p-txt'>Giảm Giá</p>
             <select className='selected' name="" id="" onChange={handleDiscount}>
